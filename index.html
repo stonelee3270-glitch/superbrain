@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<title>超级大脑 · BNI盈泰训练营</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Microsoft YaHei", "PingFang SC", sans-serif;
+  background: linear-gradient(160deg, #0a0a2e 0%, #1a1a4e 40%, #0d1b3e 100%);
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  padding-bottom: calc(40px + env(safe-area-inset-bottom, 0px));
+  touch-action: manipulation;
+}
+
+.container {
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+}
+
+.logo {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 24px;
+  background: linear-gradient(135deg, #D4A853, #F0D78C);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  box-shadow: 0 8px 32px rgba(212, 168, 83, 0.3);
+}
+
+h1 {
+  font-size: 32px;
+  font-weight: 800;
+  color: #D4A853;
+  margin-bottom: 8px;
+  letter-spacing: 4px;
+}
+
+.subtitle {
+  font-size: 16px;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 8px;
+}
+
+.nail {
+  font-size: 18px;
+  color: #CC0000;
+  font-weight: 700;
+  margin-bottom: 48px;
+  padding: 12px 20px;
+  border: 1px solid rgba(204, 0, 0, 0.3);
+  border-radius: 8px;
+  display: inline-block;
+  background: rgba(204, 0, 0, 0.08);
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  border-radius: 16px;
+  text-decoration: none;
+  transition: transform 0.15s, box-shadow 0.15s;
+  cursor: pointer;
+}
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn-test {
+  background: linear-gradient(135deg, #4F46E5, #6366F1);
+  box-shadow: 0 6px 24px rgba(79, 70, 229, 0.35);
+}
+.btn-ref {
+  background: linear-gradient(135deg, #0891B2, #06B6D4);
+  box-shadow: 0 6px 24px rgba(8, 145, 178, 0.35);
+}
+
+.btn-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.btn-text {
+  text-align: left;
+}
+.btn-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 4px;
+}
+.btn-desc {
+  font-size: 13px;
+  color: rgba(255,255,255,0.7);
+}
+
+.btn-arrow {
+  margin-left: auto;
+  font-size: 20px;
+  color: rgba(255,255,255,0.5);
+}
+
+.footer {
+  text-align: center;
+  color: rgba(255,255,255,0.3);
+  font-size: 12px;
+  line-height: 1.8;
+}
+.footer-brand {
+  color: rgba(255,255,255,0.5);
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="logo">🧠</div>
+  <h1>超级大脑</h1>
+  <p class="subtitle">BNI盈泰分会 · 专属训练营</p>
+  <div class="nail">把字变成画，大脑就开挂</div>
+
+  <div class="buttons">
+    <a href="test.html" class="btn btn-test">
+      <div class="btn-icon">⚡</div>
+      <div class="btn-text">
+        <div class="btn-title">记忆力快速测试</div>
+        <div class="btn-desc">四种模式 · 限时挑战 · 即时反馈</div>
+      </div>
+      <div class="btn-arrow">›</div>
+    </a>
+    <a href="reference.html" class="btn btn-ref">
+      <div class="btn-icon">📖</div>
+      <div class="btn-text">
+        <div class="btn-title">联想记忆参考表</div>
+        <div class="btn-desc">54位会员 · 编号联想 · 记忆故事</div>
+      </div>
+      <div class="btn-arrow">›</div>
+    </a>
+  </div>
+
+  <div class="footer">
+    <div class="footer-brand">李兰峰 教练 · 超级大脑课程</div>
+    让大脑逆龄生长
+  </div>
+</div>
+
+</body>
+</html>

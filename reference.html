@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, touch-action=manipulation">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>BNI盈泰 · 联想记忆参考表</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            padding: max(20px, env(safe-area-inset-left)) max(20px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-top));
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a73e8;
+        }
+
+        .header-link {
+            font-size: 12px;
+            color: #1a73e8;
+            text-decoration: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: #e8f0fe;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            margin-bottom: 8px;
+        }
+
+        .search-box::placeholder {
+            color: #999;
+        }
+
+        .controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .toggle-btn {
+            padding: 6px 12px;
+            background: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            flex: 1;
+            min-height: 32px;
+        }
+
+        .toggle-btn:active {
+            background: #1557b0;
+        }
+
+        .filters {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 0;
+            margin-bottom: 8px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .filter-btn {
+            padding: 6px 10px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 16px;
+            font-size: 12px;
+            white-space: nowrap;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .filter-btn.active {
+            background: #1a73e8;
+            color: white;
+            border-color: #1a73e8;
+        }
+
+        .cards-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-left: 4px solid #1a73e8;
+            cursor: pointer;
+            transition: box-shadow 0.2s ease;
+        }
+
+        .card:active {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+
+        .card-header {
+            padding: 12px 16px;
+            background: #f9f9f9;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-number {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #1a73e8, #1557b0);
+            color: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .card-header-text {
+            flex: 1;
+        }
+
+        .card-name {
+            font-weight: 600;
+            font-size: 16px;
+            color: #1a73e8;
+            margin-bottom: 2px;
+        }
+
+        .card-profession {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .card-content {
+            display: none;
+            padding: 16px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .card.expanded .card-content {
+            display: block;
+        }
+
+        .content-section {
+            margin-bottom: 12px;
+        }
+
+        .content-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .section-content {
+            font-size: 14px;
+            line-height: 1.5;
+            padding: 8px;
+            border-radius: 4px;
+            background: #f9f9f9;
+        }
+
+        .number-image {
+            background: #e3f2fd;
+            color: #1557b0;
+            font-weight: 600;
+        }
+
+        .name-image {
+            background: #f3e5f5;
+            color: #6a1b9a;
+        }
+
+        .industry-image {
+            background: #e0f2f1;
+            color: #00695c;
+        }
+
+        .story {
+            background: #fff3e0;
+            color: #e65100;
+            font-style: italic;
+        }
+
+        .card.color-1 { border-left-color: #F9A825; }
+        .card.color-2 { border-left-color: #43A047; }
+        .card.color-3 { border-left-color: #FB8C00; }
+        .card.color-4 { border-left-color: #1E88E5; }
+        .card.color-6 { border-left-color: #E64A19; }
+        .card.color-7 { border-left-color: #8E24AA; }
+        .card.color-8 { border-left-color: #00897B; }
+        .card.color-9 { border-left-color: #F9A825; }
+        .card.color-10 { border-left-color: #546E7A; }
+
+        .card.color-1 .card-header {
+            background: #FFF8E1;
+        }
+
+        .card.color-2 .card-header {
+            background: #E8F5E9;
+        }
+
+        .card.color-3 .card-header {
+            background: #FFF3E0;
+        }
+
+        .card.color-4 .card-header {
+            background: #E3F2FD;
+        }
+
+        .card.color-6 .card-header {
+            background: #FBE9E7;
+        }
+
+        .card.color-7 .card-header {
+            background: #F3E5F5;
+        }
+
+        .card.color-8 .card-header {
+            background: #E0F2F1;
+        }
+
+        .card.color-9 .card-header {
+            background: #FFFDE7;
+        }
+
+        .card.color-10 .card-header {
+            background: #ECEFF1;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #999;
+            font-size: 12px;
+            margin-top: 20px;
+            margin-bottom: env(safe-area-inset-bottom);
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+            }
+
+            .header {
+                padding: 12px;
+                margin-bottom: 12px;
+            }
+
+            .header-title {
+                font-size: 16px;
+            }
+
+            .card-header {
+                padding: 10px 12px;
+            }
+
+            .card-content {
+                padding: 12px;
+            }
+
+            .section-content {
+                font-size: 13px;
+                padding: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-top">
+                <div class="header-title">BNI盈泰 · 联想记忆参考表</div>
+                <a href="index.html" class="header-link">返回首页</a>
+            </div>
+
+            <input type="text" class="search-box" id="searchBox" placeholder="搜索: 姓名、职业、编号...">
+
+            <div class="controls">
+                <button class="toggle-btn" id="toggleAllBtn">展开全部</button>
+            </div>
+
+            <div class="filters" id="filters"></div>
+        </div>
+
+        <div class="cards-container" id="cardsContainer"></div>
+
+        <div class="empty-state" id="emptyState" style="display:none;">
+            <div class="empty-state-icon">🔍</div>
+            <div>未找到匹配的结果</div>
+        </div>
+    </div>
+
+    <div class="footer">54位BNI盈泰会员 · 图像转换记忆法</div>
+
+    <script>
+        const industryMap = {
+            1: { label: '房产与建材', color: '#F9A825', bg: '#FFF8E1' },
+            2: { label: '制造与贸易', color: '#43A047', bg: '#E8F5E9' },
+            3: { label: '金融与投资', color: '#FB8C00', bg: '#FFF3E0' },
+            4: { label: '商业与专业服务', color: '#1E88E5', bg: '#E3F2FD' },
+            6: { label: '食品与餐饮', color: '#E64A19', bg: '#FBE9E7' },
+            7: { label: '时尚与生活', color: '#8E24AA', bg: '#F3E5F5' },
+            8: { label: '医疗与健康', color: '#00897B', bg: '#E0F2F1' },
+            9: { label: '教育与文化', color: '#F9A825', bg: '#FFFDE7' },
+            10: { label: '电子与科技', color: '#546E7A', bg: '#ECEFF1' }
+        };
+
+        const membersData = [
+            { 编号: '01', 姓名: '郭翔', 职业: '人寿保险', 行业: 3, 数字联想: '小树', 姓名联想: '一口大锅在翔空飞翔', 行业联想: '人寿保险 - 金色保护伞', 联想故事: '小树上坐着一口大锅，锅在空中翔翔翼翼地飞，撑起一把巨大的金色保险伞保护着树。' },
+            { 编号: '02', 姓名: '尹茹艺', 职业: '快装墙板', 行业: 1, 数字联想: '鸭子', 姓名联想: '一只鸭子吃着软软的茹，展现艺术造型', 行业联想: '快装墙板 - 彩色墙板', 联想故事: '鸭子用彩色快装墙板拼成了一只艺术造型的大鸭子，在展览会上咕咕叫着展示它的茹菜装饰。' },
+            { 编号: '03', 姓名: '吴山林', 职业: '知识产权律师', 行业: 4, 数字联想: '耳朵', 姓名联想: '五个山林在跳舞', 行业联想: '知识产权律师 - 一把法槌', 联想故事: '大耳朵听到五个山林在争论知识产权，律师拿着法槌敲打耳朵，山林们都乖乖站成一排。' },
+            { 编号: '04', 姓名: '汪博', 职业: '支付分账系统', 行业: 10, 数字联想: '红旗', 姓名联想: '一只汪汪狗在博物馆', 行业联想: '支付分账系统 - 闪闪发光的金币', 联想故事: '红旗下的汪汪狗在博物馆展示着闪闪发光的金币，金币在分账系统中自动分散，汪汪狗开心地汪汪汪。' },
+            { 编号: '05', 姓名: '刘杨', 职业: '汽车维修', 行业: 4, 数字联想: '手套', 姓名联想: '一棵高大的杨树在流淌', 行业联想: '汽车维修 - 大扳手', 联想故事: '手套穿在杨树上，杨树流淌着机油，拿着大扳手在修车，手套被油渍弄得黑黑的。' },
+            { 编号: '06', 姓名: '潘丽环', 职业: '别墅设计', 行业: 1, 数字联想: '勺子', 姓名联想: '潘美女戴着一圈闪闪发光的钻石环', 行业联想: '别墅设计 - 豪华大宅', 联想故事: '勺子舀起一个豪华别墅，潘丽环穿着闪闪发光的环形礼服，在室内设计的房间里挥舞着勺子装饰。' },
+            { 编号: '07', 姓名: '姚晓云', 职业: '海外注册', 行业: 4, 数字联想: '拐杖', 姓名联想: '姚叔叔骑摩托，晓的大嗓门，踩着云', 行业联想: '海外注册 - 护照章戳', 联想故事: '拐杖变成了护照，姚晓云踩着云朵飞向香港，拐杖戳在护照上盖章，晓云在空中大喊"我在海外啦"。' },
+            { 编号: '08', 姓名: '关蕴倩', 职业: '工商代理', 行业: 4, 数字联想: '葫芦', 姓名联想: '关上门，葫芦里蕴藏着倩倩的秘密', 行业联想: '工商代理 - 账本和戳章', 联想故事: '葫芦被关上了，里面蕴藏着倩倩的账本和戳章，打开葫芦，账本飞出来，戳章砰砰砰地落在文件上。' },
+            { 编号: '09', 姓名: '潘俊澍', 职业: '易经风水', 行业: 4, 数字联想: '猫', 姓名联想: '潘潘猫长得俊俏，树上睡觉', 行业联想: '易经风水 - 八卦罗盘', 联想故事: '猫咪长得俊俏，在树上睡觉，睡梦中踩踏八卦罗盘，指针转啊转，预测风水吉凶。' },
+            { 编号: '10', 姓名: '廖偐廷', 职业: '医疗护理床', 行业: 8, 数字联想: '棒球', 姓名联想: '廖家打棒球，偐偐廷廷地叫', 行业联想: '医疗护理床 - 白色病床', 联想故事: '棒球砸在医疗护理床上，廖家的人都躺在床上呻吟，偐廷在旁边廷廷地问护士需要帮助吗。' },
+            { 编号: '11', 姓名: '张玉珍', 职业: '涉外律师', 行业: 4, 数字联想: '筷子', 姓名联想: '张开大嘴，玉珍闪闪发光的珍珠', 行业联想: '涉外律师 - 法律文件和签笔', 联想故事: '筷子夹起玉珍珠宝，张律师用签笔在涉外合同上挥舞筷子，珍珠闪闪发光地见证这份国际法律文件。' },
+            { 编号: '12', 姓名: '江涛', 职业: '房产中介', 行业: 1, 数字联想: '婴儿', 姓名联想: '江水中的波涛，婴儿在游泳', 行业联想: '房产中介 - 房屋钥匙', 联想故事: '婴儿在江涛中摇摇晃晃，拿着房屋钥匙，涛涛的水中矗立着一栋房子，婴儿咿呀呀地介绍房产。' },
+            { 编号: '13', 姓名: '郑宏达', 职业: '家居建材', 行业: 1, 数字联想: '医生', 姓名联想: '医生郑先生，宏伟的身体，达到完美', 行业联想: '家居建材 - 油漆桶', 联想故事: '医生郑宏达检查油漆桶，发现涂料有质量问题，用听诊器诊断，宏大的油漆罐在医院里达到了检验标准。' },
+            { 编号: '14', 姓名: '赵铄心', 职业: '无人设备课程', 行业: 9, 数字联想: '钥匙', 姓名联想: '赵家人找东西，铄亮的心灵闪闪发光', 行业联想: '无人设备课程 - 飞行无人机', 联想故事: '钥匙打开教室，无人机飞进来，赵铄心闪闪发光，驾驶无人机做教学演示，钥匙在空中旋转跳舞。' },
+            { 编号: '15', 姓名: '钟煜', 职业: '数字化管理', 行业: 10, 数字联想: '鹦鹉', 姓名联想: '时钟上的鹦鹉，煜煜生辉', 行业联想: '数字化管理 - 电脑屏幕', 联想故事: '鹦鹉站在时钟上，对着电脑屏幕学企业管理数字，煜煜发光的鹦鹉在屏幕前翩翩起舞，钟声叮叮当当。' },
+            { 编号: '16', 姓名: '吴小平', 职业: '文旅活动', 行业: 4, 数字联想: '杨柳', 姓名联想: '五个小平台整整齐齐排列', 行业联想: '文旅活动 - 旅游地图和帐篷', 联想故事: '杨柳树下有五个小平台，吴小平在每个平台上搭帐篷，地图铺满了柳树枝，游客们在文旅活动中欢呼雀跃。' },
+            { 编号: '17', 姓名: '谢丽萍', 职业: '茶叶', 行业: 6, 数字联想: '仪器', 姓名联想: '谢谢美丽的萍萍，平安健康', 行业联想: '茶叶 - 茶杯和茶叶', 联想故事: '仪器测试茶叶质量，谢丽萍用精密仪器检验，茶杯里的萍萍（浮萍）开心地漂浮，茶香四溢，丽美如画。' },
+            { 编号: '18', 姓名: '王少江', 职业: '商旅服务', 行业: 4, 数字联想: '篱笆', 姓名联想: '王帝坐在篱笆上，年少江南', 行业联想: '商旅服务 - 飞机和行李箱', 联想故事: '篱笆围成的飞机场，王少爷坐在飞机旁，江南的行李箱堆积如山，商旅服务员在篱笆外忙碌地搬运。' },
+            { 编号: '19', 姓名: '赵爽', 职业: '贷款咨询', 行业: 3, 数字联想: '药酒', 姓名联想: '找到爽爽的感觉', 行业联想: '贷款咨询 - 金色钞票', 联想故事: '赵爽喝了药酒，爽快地找到贷款咨询师，金色钞票从酒杯里倒出来，赵爽找到了贷款的爽快感觉。' },
+            { 编号: '20', 姓名: '苏缇', 职业: '高端女装', 行业: 7, 数字联想: '耳环', 姓名联想: '苏州美女缇缇穿着迷你', 行业联想: '高端女装 - 闪闪发光的晚礼服', 联想故事: '耳环闪闪发光，苏缇穿着高端女装晚礼服，缇缇在模特台上摇曳，耳环跟着跳舞，高雅而闪耀。' },
+            { 编号: '21', 姓名: '李兰峰', 职业: '学习力培训', 行业: 9, 数字联想: '鳄鱼', 姓名联想: '李家的兰花爬上山峰', 行业联想: '学习力培训 - 开启的大脑', 联想故事: '鳄鱼爬山峰，李兰花在峰顶讲授学习力，大脑在鳄鱼和兰花之间闪闪发光，最强大脑在山峰上诞生。' },
+            { 编号: '22', 姓名: '胡慧静', 职业: '白酒批发', 行业: 6, 数字联想: '鸳鸯', 姓名联想: '胡须的慧智人静静思考', 行业联想: '白酒批发 - 酒瓶和酒杯', 联想故事: '鸳鸯在白酒杯里飘浮，胡慧静聪慧地品酒，静静地思考白酒的批发生意，鸳鸯酒瓶排成整齐的队列。' },
+            { 编号: '23', 姓名: '龙婧', 职业: '民商事律师', 行业: 4, 数字联想: '和尚', 姓名联想: '龙与和尚打架，婧婧静静旁观', 行业联想: '民商事律师 - 法律书籍和法槌', 联想故事: '龙与和尚在法庭上争执，龙婧律师静静敲法槌，民商事案件堆成书山，和尚和龙都听龙婧的判决。' },
+            { 编号: '24', 姓名: '陈辉', 职业: '潮汕菜', 行业: 6, 数字联想: '闹钟', 姓名联想: '陈旧的闹钟闹啊闹，光辉闪闪', 行业联想: '潮汕菜 - 热汤和砂锅', 联想故事: '闹钟叮叮当当，陈辉光辉地摆出潮汕砂锅，热汤在闹钟旁冒着热气，香气和闹声混在一起。' },
+            { 编号: '25', 姓名: '张家珍', 职业: '团体服生产', 行业: 2, 数字联想: '二胡', 姓名联想: '张家大宅的珍宝二胡', 行业联想: '团体服生产 - 整齐的制服', 联想故事: '二胡奏出美妙乐声，张家珍制作的团体服在舞台上整齐地随节奏摆动，二胡声声入耳，珍品服装闪闪发光。' },
+            { 编号: '26', 姓名: '余畯翰', 职业: '服装代加工', 行业: 2, 数字联想: '河流', 姓名联想: '河流中游着鱼，翰翰墨墨的书法笔', 行业联想: '服装代加工 - 裁缝剪刀和布料', 联想故事: '河流中游着装饰布料，余畯翰拿着剪刀在水上裁剪，翰笔般的裁线精准如书法，服装代加工在河流上展开。' },
+            { 编号: '27', 姓名: '徐葆青', 职业: '私密护理', 行业: 8, 数字联想: '耳机', 姓名联想: '徐徐蔓延的葆护绿色青春', 行业联想: '私密护理 - 粉色心形符号', 联想故事: '耳机传来徐葆青的声音，粉色心形护理产品从耳机里飞出，保护女性青春活力，耳机成了爱的传声筒。' },
+            { 编号: '28', 姓名: '李春霞', 职业: '医疗美容', 行业: 8, 数字联想: '荷花', 姓名联想: '李字荷花绽放春天的晨曦红霞', 行业联想: '医疗美容 - 美丽女人脸庞', 联想故事: '荷花中绽放李春霞的美容脸庞，早霞映照在医疗美容仪器上，荷花随春风轻轻摇曳，美丽的霞光闪闪发光。' },
+            { 编号: '29', 姓名: '刘群飞', 职业: '营养保健品', 行业: 8, 数字联想: '阿胶', 姓名联想: '刘阿姨买了阿胶，一群人飞来品尝', 行业联想: '营养保健品 - 金色胶囊', 联想故事: '阿胶和金色胶囊混在一起，刘群人飞过来抢购，保健品营养闪闪发光，群人为阿胶争得面红耳赤。' },
+            { 编号: '30', 姓名: '肖朝丽', 职业: '税务合规', 行业: 4, 数字联想: '三轮车', 姓名联想: '肖肖坐在朝阳，丽丽打扮', 行业联想: '税务合规 - 税务表格和印章', 联想故事: '三轮车载着税务表格和印章，肖朝丽坐在车上朝阳而行，税表在三轮车上整齐排列，丽丽的制服闪闪发光。' },
+            { 编号: '31', 姓名: '罗惠珊', 职业: '青少年辅导', 行业: 9, 数字联想: '鲨鱼', 姓名联想: '罗密欧的鲨鱼，惠惠的珊瑚', 行业联想: '青少年辅导 - 书籍和笑脸', 联想故事: '鲨鱼带着罗惠珊和珊瑚礁，在教室里辅导青少年，书籍堆成珊瑚丛，鲨鱼温和地笑着，青少年们快乐成长。' },
+            { 编号: '32', 姓名: '梁玉银', 职业: '实木家具', 行业: 1, 数字联想: '扇子', 姓名联想: '梁家玉石闪闪银光', 行业联想: '实木家具 - 木制餐桌椅', 联想故事: '扇子摇动着实木家具，梁玉银的家具闪闪发光，玉石般的木纹在扇风中显现，银色的涂层反光耀眼。' },
+            { 编号: '33', 姓名: '胡仲锦', 职业: '窗帘', 行业: 1, 数字联想: '星星', 姓名联想: '胡须男仲老师，锦缎般的衣服', 行业联想: '窗帘 - 五彩花纹布料', 联想故事: '星星窗帘闪闪发光，胡仲锦穿着锦缎衣服站在窗边，星光透过彩色窗帘洒落，仲老师展示着美丽的窗帘花纹。' },
+            { 编号: '34', 姓名: '方明', 职业: '跨境金融', 行业: 3, 数字联想: '绅士', 姓名联想: '方正的绅士，聪慧的眼光', 行业联想: '跨境金融 - 飞翔的钞票和地球', 联想故事: '绅士方明明白金融之道，跨境钞票在他的手中飞舞，地球在旋转，银行卡闪闪发光，绅士的智慧掌控全球金融。' },
+            { 编号: '35', 姓名: '王岚', 职业: '企业管理咨询', 行业: 4, 数字联想: '珊瑚', 姓名联想: '王帝在岚雾中骑行', 行业联想: '企业管理咨询 - 思维脑图和笔', 联想故事: '珊瑚礁中的王岚在岚雾里咨询管理之道，脑图在珊瑚间展开，笔在水中快速写下管理方案，王岚如同珊瑚群智者。' },
+            { 编号: '36', 姓名: '吴致炜', 职业: '肩颈疏压', 行业: 8, 数字联想: '山鹿', 姓名联想: '五只鹿致力于炜炜的光芒', 行业联想: '肩颈疏压 - 按摩手掌和颈椎', 联想故事: '山鹿用按摩手掌为吴致炜的肩颈疏压，炜炜发光的颈椎得到放松，山鹿在连锁店里跳舞，致力于健康加盟。' },
+            { 编号: '37', 姓名: '曾洲洲', 职业: '国内物流', 行业: 4, 数字联想: '山鸡', 姓名联想: '曾经的山鸡，洲洲飘洋过海', 行业联想: '国内物流 - 快递箱和车辆', 联想故事: '山鸡驾驶物流车，曾洲洲操控快递系统，洲洲的货物在全国各地飞驰，物流链条如山鸡的翅膀展开。' },
+            { 编号: '38', 姓名: '叶蔼云', 职业: '精油疗法', 行业: 8, 数字联想: '妇女', 姓名联想: '树叶上的妇女，温蔼地飘云', 行业联想: '精油疗法 - 芳香精油瓶', 联想故事: '树叶妇女在云中喷洒精油，蔼蔼的云雾中弥漫香气，精油瓶在叶子上滚动，植物精油疗法在云端进行。' },
+            { 编号: '39', 姓名: '夏军', 职业: '软体家具', 行业: 1, 数字联想: '三角尺', 姓名联想: '夏日三角军旗飘扬', 行业联想: '软体家具 - 舒适沙发', 联想故事: '三角尺测量软体沙发，夏日军旗在沙发群中飘扬，夏军躺在舒适的沙发上，三角尺确保每个角度完美。' },
+            { 编号: '40', 姓名: '黄琼宾', 职业: '刑事律师', 行业: 4, 数字联想: '司令', 姓名联想: '黄色的琼浆，宾客司令官', 行业联想: '刑事律师 - 法庭和法槌', 联想故事: '司令黄琼宾在法庭上指挥刑事案件，法槌如司令的指挥棒，琼浆美酒陪伴宾客见证司法公正，黄琼律师威风凛凛。' },
+            { 编号: '41', 姓名: '吴杰林', 职业: '铝合金门窗', 行业: 1, 数字联想: '司仪', 姓名联想: '五个杰出的林子司仪', 行业联想: '铝合金门窗 - 闪闪发光的铝合金框', 联想故事: '司仪吴杰林站在铝合金门窗前，五个杰出的林子在背后闪闪发光，司仪介绍着高端门窗产品，铝合金反射着聚光灯。' },
+            { 编号: '42', 姓名: '韩东海', 职业: '电梯', 行业: 1, 数字联想: '柿儿', 姓名联想: '韩国柿子在东海漂浮', 行业联想: '电梯 - 高速上升的电梯间', 联想故事: '柿子在电梯里上升，韩东海在东海电梯系统中管理，海水似乎要从电梯冲出，柿子们随着电梯高速飙升。' },
+            { 编号: '43', 姓名: '马文英', 职业: '美发设计', 行业: 7, 数字联想: '石山', 姓名联想: '马儿踏过石山，文英俊美', 行业联想: '美发设计 - 彩色头发和剪刀', 联想故事: '马儿在石山上做美发，剪刀在马毛中舞动，文英的设计在石山回响，彩色头发在山顶闪闪发光。' },
+            { 编号: '44', 姓名: '温惠娴', 职业: '形象顾问', 行业: 7, 数字联想: '石狮', 姓名联想: '温暖的狮子，惠惠娴静', 行业联想: '形象顾问 - 时尚镜子和衣架', 联想故事: '石狮在镜子前看造型，温惠娴娴静地顾问，形象改造从狮子毛发开始，衣架上的衣服在石狮身上试穿闪耀。' },
+            { 编号: '45', 姓名: '汪鸿', 职业: '股权投资', 行业: 3, 数字联想: '师傅', 姓名联想: '汪汪狗和红鸿雁', 行业联想: '股权投资 - 上升的K线图', 联想故事: '师傅汪鸿指导股权投资，K线如鸿雁高飞，汪汪声中股票上升，师傅的智慧让投资飙升，鸿运当头。' },
+            { 编号: '46', 姓名: '王玲', 职业: '海味滋补', 行业: 6, 数字联想: '饲料', 姓名联想: '王帝的铃铛清脆响', 行业联想: '海味滋补 - 人参和冬虫草', 联想故事: '饲料堆成人参冬虫草，王玲的铃铛在滋补品堆前响起，玲玲的声音招引顾客，海味参茸在饲料堆上闪耀。' },
+            { 编号: '47', 姓名: '黄伟明', 职业: '床垫', 行业: 1, 数字联想: '司机', 姓名联想: '黄色的伟大司机，聪慧明亮', 行业联想: '床垫 - 舒适厚实的床垫', 联想故事: '司机黄伟明开着床垫车，明亮的黄灯在床垫展厅闪闪发光，司机介绍着伟大的床垫舒适度，床垫如司机般稳重。' },
+            { 编号: '48', 姓名: '廖小莹', 职业: '中医门诊', 行业: 8, 数字联想: '雪花', 姓名联想: '廖家小妹莹莹闪闪发光', 行业联想: '中医门诊 - 针灸和草药', 联想故事: '雪花落在中医诊所，廖小莹在草药香气中闪闪发光，莹莹的针灸手法如雪花飘零精准，小妹治疗雪花般轻盈。' },
+            { 编号: '49', 姓名: '韩胜方', 职业: '空调销售', 行业: 1, 数字联想: '四驱车', 姓名联想: '韩国的胜利四方出击', 行业联想: '空调销售 - 蓝色空调机', 联想故事: '四驱车载着空调四方销售，韩胜方的销售战略四面出击，空调在四驱车上闪闪发光，胜利的冷气在车中蔓延。' },
+            { 编号: '50', 姓名: '丁乐文', 职业: '劳资顾问', 行业: 4, 数字联想: '武林高手', 姓名联想: '丁丁武林高手，乐文武功', 行业联想: '劳资顾问 - 合同和握手', 联想故事: '武林高手丁乐文用武功处理劳资纠纷，合同如武器精准，握手在武林规则中完成，丁丁的乐文品格四海钦敬。' },
+            { 编号: '51', 姓名: '李梅', 职业: '书法艺术', 行业: 9, 数字联想: '工人', 姓名联想: '李家的梅花工人在建筑', 行业联想: '书法艺术 - 笔墨纸砚', 联想故事: '工人李梅用毛笔挥洒，笔墨纸砚在工地上闪耀，梅花书法在建筑的墙上绽放，工人的艺术品闪闪发光。' },
+            { 编号: '52', 姓名: '蹇梦琴', 职业: '健身运动馆', 行业: 8, 数字联想: '鼓儿', 姓名联想: '蹇蹇跳舞，梦琴的鼓声', 行业联想: '健身运动馆 - 哑铃和跑步机', 联想故事: '鼓儿声声激励健身，蹇梦琴带领会员跳舞运动，哑铃随鼓声上下，健身馆充满琴声和鼓声的和谐。' },
+            { 编号: '53', 姓名: '欧沛汝', 职业: '翡翠珠宝', 行业: 7, 数字联想: '午餐', 姓名联想: '欧洲午餐，沛然充足的汝水', 行业联想: '翡翠珠宝 - 绿色晶莹翡翠', 联想故事: '午餐桌上摆着翡翠珠宝，欧沛汝的翡翠闪闪绿光，珠宝如午餐一样令人垂涎，汝水般晶莹的翡翠闪耀餐桌。' },
+            { 编号: '54', 姓名: '李勇辉', 职业: '口腔连锁', 行业: 8, 数字联想: '武士', 姓名联想: '李家的勇敢武士，光辉闪闪', 行业联想: '口腔连锁 - 牙齿和牙刷', 联想故事: '武士李勇辉用牙刷保护牙齿，勇气闪闪发光，口腔诊所如武士战场，牙齿在连锁医院中闪耀辉煌。' }
+        ];
+
+        let allExpanded = false;
+        const cardsContainer = document.getElementById('cardsContainer');
+        const searchBox = document.getElementById('searchBox');
+        const toggleAllBtn = document.getElementById('toggleAllBtn');
+        const filtersContainer = document.getElementById('filters');
+        const emptyState = document.getElementById('emptyState');
+
+        function initFilters() {
+            const uniqueIndustries = [...new Set(membersData.map(m => m.行业))].sort();
+            uniqueIndustries.forEach(industryId => {
+                const industry = industryMap[industryId];
+                const btn = document.createElement('button');
+                btn.className = 'filter-btn';
+                btn.textContent = industry.label;
+                btn.dataset.industry = industryId;
+                btn.addEventListener('click', () => {
+                    btn.classList.toggle('active');
+                    filterCards();
+                });
+                filtersContainer.appendChild(btn);
+            });
+        }
+
+        function createCard(member) {
+            const industry = industryMap[member.行业];
+            const card = document.createElement('div');
+            card.className = `card color-${member.行业}`;
+
+            const headerHTML = `
+                <div class="card-header">
+                    <div class="card-number">${member.编号}</div>
+                    <div class="card-header-text">
+                        <div class="card-name">${member.姓名}</div>
+                        <div class="card-profession">${member.职业}</div>
+                    </div>
+                </div>
+            `;
+
+            const contentHTML = `
+                <div class="card-content">
+                    <div class="content-section">
+                        <div class="section-label">数字联想</div>
+                        <div class="section-content number-image">${member.数字联想}</div>
+                    </div>
+                    <div class="content-section">
+                        <div class="section-label">姓名联想</div>
+                        <div class="section-content name-image">${member.姓名联想}</div>
+                    </div>
+                    <div class="content-section">
+                        <div class="section-label">行业联想</div>
+                        <div class="section-content industry-image">${member.行业联想}</div>
+                    </div>
+                    <div class="content-section">
+                        <div class="section-label">联想故事</div>
+                        <div class="section-content story">${member.联想故事}</div>
+                    </div>
+                </div>
+            `;
+
+            card.innerHTML = headerHTML + contentHTML;
+            card.addEventListener('click', () => {
+                card.classList.toggle('expanded');
+            });
+
+            return card;
+        }
+
+        function renderCards(data) {
+            cardsContainer.innerHTML = '';
+            if (data.length === 0) {
+                emptyState.style.display = 'block';
+                return;
+            }
+            emptyState.style.display = 'none';
+            data.forEach(member => {
+                cardsContainer.appendChild(createCard(member));
+            });
+        }
+
+        function filterCards() {
+            const searchTerm = searchBox.value.toLowerCase();
+            const activeFilters = Array.from(filtersContainer.querySelectorAll('.filter-btn.active'))
+                .map(btn => parseInt(btn.dataset.industry));
+
+            let filtered = membersData.filter(member => {
+                const matchesSearch = !searchTerm ||
+                    member.姓名.includes(searchTerm) ||
+                    member.职业.includes(searchTerm) ||
+                    member.编号.includes(searchTerm);
+
+                const matchesIndustry = activeFilters.length === 0 || activeFilters.includes(member.行业);
+
+                return matchesSearch && matchesIndustry;
+            });
+
+            renderCards(filtered);
+        }
+
+        toggleAllBtn.addEventListener('click', () => {
+            allExpanded = !allExpanded;
+            const cards = cardsContainer.querySelectorAll('.card');
+            if (allExpanded) {
+                cards.forEach(card => card.classList.add('expanded'));
+                toggleAllBtn.textContent = '收起全部';
+            } else {
+                cards.forEach(card => card.classList.remove('expanded'));
+                toggleAllBtn.textContent = '展开全部';
+            }
+        });
+
+        searchBox.addEventListener('input', filterCards);
+
+        initFilters();
+        renderCards(membersData);
+    </script>
+</body>
+</html>

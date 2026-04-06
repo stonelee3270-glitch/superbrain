@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>BNI记忆力测试</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, "Microsoft YaHei", "微软雅黑", sans-serif;
+            background: linear-gradient(135deg, #f0f5ff 0%, #e8eef8 100%);
+            color: #1f2937;
+            overflow: hidden;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            padding-bottom: max(20px, env(safe-area-inset-bottom));
+        }
+
+        .screen {
+            display: none;
+            width: 100%;
+            height: 100%;
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .screen.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            padding: 20px;
+            padding-left: max(20px, env(safe-area-inset-left));
+            padding-right: max(20px, env(safe-area-inset-right));
+        }
+
+        /* HOME SCREEN */
+        #homeScreen {
+            flex-direction: column;
+            justify-content: flex-start;
+            background: linear-gradient(135deg, #f0f5ff 0%, #e8eef8 100%);
+        }
+
+        .home-container {
+            padding: 20px;
+            padding-top: max(40px, 20px + env(safe-area-inset-top));
+            padding-left: max(20px, env(safe-area-inset-left));
+            padding-right: max(20px, env(safe-area-inset-right));
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .home-title {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1f2937;
+            line-height: 1.4;
+        }
+
+        .home-title .subtitle {
+            font-size: 13px;
+            color: #6b7280;
+            font-weight: 400;
+            margin-top: 8px;
+        }
+
+        .modes-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: auto;
+            flex: 1;
+            align-content: center;
+        }
+
+        .mode-button {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 24px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .mode-button:active {
+            transform: scale(0.95);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+        }
+
+        .mode-button .number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #4f46e5;
+            margin-bottom: 8px;
+        }
+
+        .mode-button .label {
+            font-size: 13px;
+            color: #6b7280;
+            line-height: 1.4;
+        }
+
+        .home-footer {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .settings-btn {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #4f46e5;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .settings-btn:active {
+            background: #f3f4f6;
+            transform: scale(0.98);
+        }
+
+        .back-link {
+            text-align: center;
+            padding: 8px;
+            font-size: 12px;
+            color: #9ca3af;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .back-link:active {
+            color: #6b7280;
+        }
+
+        /* SETTINGS SCREEN */
+        #settingsScreen {
+            flex-direction: column;
+            background: linear-gradient(135deg, #f0f5ff 0%, #e8eef8 100%);
+        }
+
+        .settings-header {
+            padding: 20px;
+            padding-top: max(20px, env(safe-area-inset-top));
+            padding-left: max(20px, env(safe-area-inset-left));
+            padding-right: max(20px, env(safe-area-inset-right));
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 18px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .settings-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            padding-left: max(20px, env(safe-area-inset-left));
+            padding-right: max(20px, env(safe-area-inset-right));
+        }
+
+        .settings-section {
+            margin-bottom: 32px;
+        }
+
+        .settings-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-option {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .btn-option.selected {
+            background: #4f46e5;
+            border-color: #4f46e5;
+            color: white;
+        }
+
+        .btn-option:active {
+            transform: scale(0.95);
+        }
+
+        .slider-container {
+            margin-bottom: 16px;
+        }
+
+        .slider-label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #e5e7eb;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #4f46e5;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #4f46e5;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+
+        .settings-footer {
+            padding: 20px;
+            padding-left: max(20px, env(safe-area-inset-left));
+            padding-right: max(20px, env(safe-area-inset-right));
+            padding-bottom: max(20px, env(safe-area-inset-bottom));
+            background: white;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .save-btn {
+            width: 100%;
+            padding: 14px;
+            background: #4f46e5;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .save-btn:active {
+            background: #4338ca;
+            transform: scale(0.98);
+        }
+
+        /* TESTING SCREEN */
+        #testingScreen {
+            flex-direction: column;
+            background: linear-gradient(135deg, #f0f5ff 0%, #e8eef8 100%);
+        }
+
+        .testing-header {
+            padding: 12px 20px;
+            padding-top: max(12px, env(safe-area-inset-top));
+            padding-left: max(20px, env(safe-area-inset-left));
+            padding-right: max(20px, env(safe-area-inset-right));
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #4f46e5;
+            transition: width 0.3s ease;
+        }
+
+        .testing-stats {
+            display: flex;
+            gap: 16px;
+            font-size: 12px;
+            color: #6b7280;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-value {
+            font-weight: 600;
+            color: #4f46e5;
+        }
+
+        .exit-btn {
+            background: none;
+            border: none;
+            color: #ef4444;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 4px 8px;
+        }
+
+        .exit-btn:active {
+            opacity: 0.7;
+        }
+
+        .testing-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            padding-left: max(20px, env(safe-area-inset-left));
+            padding-right: max(20px, env(safe-area-inset-right));
+            gap: 20px;
+        }
+
+        .timer-display {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: white;
+            border: 4px solid #4f46e5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 700;
+            color: #4f46e5;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+        }
+
+        .timer-display.warning {
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+
+        .question-display {
+            font-size: 48px;
+            font-weight: 700;
+            color: #1f2937;
+            text-align: center;
+            padding: 20px;
+            line-height: 1.2;
+            word-break: break-all;
+        }
+
+        .reveal-btn {
+            background: #eab308;
+            color: #1f2937;
+            border: none;
+            border-radius: 12px;
+            padding: 14px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(234, 179, 8, 0.2);
+        }
+
+        .reveal-btn:active {
+            background: #ca8a04;
+            transform: scale(0.98);
+        }
+
+        .answer-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 6px solid;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            width: 100%;
+        }
+
+        .answer-title {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+
+        .answer-name {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 12px;
+        }
+
+        .answer-info {
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .answer-info-row {
+            margin-bottom: 6px;
+        }
+
+        .answer-label {
+            color: #6b7280;
+        }
+
+        .answer-value {
+            color: #1f2937;
+            font-weight: 500;
+        }
+
+        .response-buttons {
+            display: flex;
+            gap: 12px;
+            margin: 20px 0;
+            width: 100%;
+        }
+
+        .btn-remember {
+            flex: 1;
+            background: #22c55e;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-remember:active {
+            background: #16a34a;
+            transform: scale(0.98);
+        }
+
+        .btn-forgot {
+            flex: 1;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-forgot:active {
+            background: #dc2626;
+            transform: scale(0.98);
+        }
+
+        .next-btn {
+            width: 100%;
+            background: #4f46e5;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin: 20px 0;
+        }
+
+        .next-btn:active {
+            background: #4338ca;
+            transform: scale(0.98);
+        }
+
+        /* RESULTS SCREEN */
+        #resultsScreen {
+            flex-direction: column;
+            background: linear-gradient(135deg, #f0f5ff 0%, #e8eef8 100%);
+        }
+
+        .results-header {
+            padding: 20px;
+            padding-top: max(40px, 20px + env(safe-area-inset-top));
+            padding-left: max(20px, env(safe-area-inset-left));
+            padding-right: max(20px, env(safe-area-inset-right));
+            text-align: center;
+        }
+
+        .results-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 24px;
+        }
+
+        .score-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .score-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .score-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .score-label {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .score-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #4f46e5;
+        }
+
+        .accuracy-bar {
+            width: 100%;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 12px;
+        }
+
+        .accuracy-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4f46e5, #22c55e);
+            transition: width 0.5s ease;
+        }
+
+        .results-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            padding-left: max(20px, env(safe-area-inset-left));
+            padding-right: max(20px, env(safe-area-inset-right));
+        }
+
+        .wrong-answers {
+            margin-top: 20px;
+        }
+
+        .wrong-answers-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 12px;
+        }
+
+        .wrong-item {
+            background: white;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-left: 4px solid #ef4444;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+        }
+
+        .wrong-item-question {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 4px;
+        }
+
+        .wrong-item-your {
+            font-size: 13px;
+            color: #ef4444;
+            margin-bottom: 4px;
+        }
+
+        .wrong-item-correct {
+            font-size: 13px;
+            color: #22c55e;
+        }
+
+        .results-footer {
+            padding: 20px;
+            padding-left: max(20px, env(safe-area-inset-left));
+            padding-right: max(20px, env(safe-area-inset-right));
+            padding-bottom: max(20px, env(safe-area-inset-bottom));
+            display: flex;
+            gap: 12px;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .btn-again {
+            flex: 1;
+            background: #4f46e5;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-again:active {
+            background: #4338ca;
+            transform: scale(0.98);
+        }
+
+        .btn-home {
+            flex: 1;
+            background: white;
+            color: #4f46e5;
+            border: 2px solid #4f46e5;
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-home:active {
+            background: #f0f4ff;
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body>
+    <!-- HOME SCREEN -->
+    <div id="homeScreen" class="screen active">
+        <div class="home-container">
+            <div class="home-title">
+                BNI盈泰分会
+                <div class="subtitle">记忆力快速测试</div>
+            </div>
+            <div class="modes-grid">
+                <button class="mode-button" onclick="startTest(1)">
+                    <div class="number">1</div>
+                    <div class="label">编号→人名</div>
+                </button>
+                <button class="mode-button" onclick="startTest(2)">
+                    <div class="number">2</div>
+                    <div class="label">人名→编号</div>
+                </button>
+                <button class="mode-button" onclick="startTest(3)">
+                    <div class="number">3</div>
+                    <div class="label">人名→行业</div>
+                </button>
+                <button class="mode-button" onclick="startTest(4)">
+                    <div class="number">4</div>
+                    <div class="label">行业→人名</div>
+                </button>
+            </div>
+            <div class="home-footer">
+                <button class="settings-btn" onclick="showSettings()">设置</button>
+                <a href="index.html" class="back-link">返回首页</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- SETTINGS SCREEN -->
+    <div id="settingsScreen" class="screen">
+        <div class="settings-header">设置</div>
+        <div class="settings-content">
+            <!-- Timer Settings -->
+            <div class="settings-section">
+                <label class="settings-label">每题时限</label>
+                <div class="button-group">
+                    <button class="btn-option" data-timer="3" onclick="setTimer(3)">3秒</button>
+                    <button class="btn-option selected" data-timer="5" onclick="setTimer(5)">5秒</button>
+                    <button class="btn-option" data-timer="10" onclick="setTimer(10)">10秒</button>
+                    <button class="btn-option" data-timer="unlimited" onclick="setTimer('unlimited')">无限</button>
+                </div>
+            </div>
+
+            <!-- Number Range -->
+            <div class="settings-section">
+                <label class="settings-label">会员编号范围</label>
+                <div class="slider-container">
+                    <div class="slider-label">
+                        <span>开始</span>
+                        <span id="startLabel">1</span>
+                    </div>
+                    <input type="range" id="startRange" min="1" max="54" value="1" oninput="updateStartRange(this.value)">
+                </div>
+                <div class="slider-container">
+                    <div class="slider-label">
+                        <span>结束</span>
+                        <span id="endLabel">54</span>
+                    </div>
+                    <input type="range" id="endRange" min="1" max="54" value="54" oninput="updateEndRange(this.value)">
+                </div>
+            </div>
+
+            <!-- Industry Filter -->
+            <div class="settings-section">
+                <label class="settings-label">行业筛选</label>
+                <div class="button-group">
+                    <button class="btn-option selected" data-industry="all" onclick="toggleIndustry('all')">全部</button>
+                    <button class="btn-option" data-industry="1" onclick="toggleIndustry(1)">房产与建材</button>
+                    <button class="btn-option" data-industry="2" onclick="toggleIndustry(2)">制造与贸易</button>
+                    <button class="btn-option" data-industry="3" onclick="toggleIndustry(3)">金融与投资</button>
+                    <button class="btn-option" data-industry="4" onclick="toggleIndustry(4)">商业与专业服务</button>
+                    <button class="btn-option" data-industry="6" onclick="toggleIndustry(6)">食品与餐饮</button>
+                    <button class="btn-option" data-industry="7" onclick="toggleIndustry(7)">时尚与生活</button>
+                    <button class="btn-option" data-industry="8" onclick="toggleIndustry(8)">医疗与健康</button>
+                    <button class="btn-option" data-industry="9" onclick="toggleIndustry(9)">教育与文化</button>
+                    <button class="btn-option" data-industry="10" onclick="toggleIndustry(10)">电子与科技</button>
+                </div>
+            </div>
+        </div>
+        <div class="settings-footer">
+            <button class="save-btn" onclick="saveSettings()">保存设置</button>
+        </div>
+    </div>
+
+    <!-- TESTING SCREEN -->
+    <div id="testingScreen" class="screen">
+        <div class="testing-header">
+            <div class="testing-stats">
+                <div class="stat-item">进度 <span class="stat-value" id="progress">0/0</span></div>
+                <div class="stat-item">得分 <span class="stat-value" id="score">0</span></div>
+                <div class="stat-item">准确率 <span class="stat-value" id="accuracy">0%</span></div>
+            </div>
+            <button class="exit-btn" onclick="confirmExit()">退出</button>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar"></div>
+        </div>
+        <div class="testing-content" id="testContent">
+            <div id="timerContainer" class="timer-display" style="display: none;"></div>
+            <div id="questionDisplay" class="question-display"></div>
+            <div id="controlsContainer">
+                <button class="reveal-btn" onclick="revealAnswer()">点击揭晓答案</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESULTS SCREEN -->
+    <div id="resultsScreen" class="screen">
+        <div class="results-header">
+            <div class="results-title">测试完成</div>
+            <div class="score-card">
+                <div class="score-row">
+                    <div class="score-label">总题数</div>
+                    <div class="score-value" id="totalQuestions">0</div>
+                </div>
+                <div class="score-row">
+                    <div class="score-label">正确数</div>
+                    <div class="score-value" id="correctAnswers">0</div>
+                </div>
+                <div class="score-row">
+                    <div class="score-label">准确率</div>
+                    <div class="score-value" id="finalAccuracy">0%</div>
+                </div>
+                <div class="accuracy-bar">
+                    <div class="accuracy-fill" id="accuracyBar"></div>
+                </div>
+            </div>
+        </div>
+        <div class="results-content">
+            <div id="wrongAnswersList"></div>
+        </div>
+        <div class="results-footer">
+            <button class="btn-again" onclick="backToHome(); startTest(currentTestMode)">再来一轮</button>
+            <button class="btn-home" onclick="backToHome()">返回首页</button>
+        </div>
+    </div>
+
+    <script>
+        // ===== MEMBER DATA =====
+        const members = [
+            { id: 1, name: "郭翔", profession: "人寿保险信托", industry: "金融与投资", ic: 3 },
+            { id: 2, name: "尹茹艺", profession: "快装墙板生产销售", industry: "房产与建材", ic: 1 },
+            { id: 3, name: "吴山林", profession: "知识产权律师", industry: "商业与专业服务", ic: 4 },
+            { id: 4, name: "汪博", profession: "支付分账系统", industry: "电子与科技", ic: 10 },
+            { id: 5, name: "刘杨", profession: "汽车维修", industry: "商业与专业服务", ic: 4 },
+            { id: 6, name: "潘丽环", profession: "别墅大宅室内设计装修", industry: "房产与建材", ic: 1 },
+            { id: 7, name: "姚晓云", profession: "香港及海外公司注册", industry: "商业与专业服务", ic: 4 },
+            { id: 8, name: "关蕴倩", profession: "工商代理记账", industry: "商业与专业服务", ic: 4 },
+            { id: 9, name: "潘俊澍", profession: "易经风水", industry: "商业与专业服务", ic: 4 },
+            { id: 10, name: "廖偐廷", profession: "医疗护理床生产", industry: "医疗与健康", ic: 8 },
+            { id: 11, name: "张玉珍", profession: "涉外律师", industry: "商业与专业服务", ic: 4 },
+            { id: 12, name: "江涛", profession: "房产中介", industry: "房产与建材", ic: 1 },
+            { id: 13, name: "郑宏达", profession: "家居建材涂料", industry: "房产与建材", ic: 1 },
+            { id: 14, name: "赵铄心", profession: "无人设备课程及应用", industry: "教育与文化", ic: 9 },
+            { id: 15, name: "钟煜", profession: "企业管理数字化服务", industry: "商业与专业服务", ic: 4 },
+            { id: 16, name: "吴小平", profession: "企业文旅活动定制", industry: "商业与专业服务", ic: 4 },
+            { id: 17, name: "谢丽萍", profession: "茶叶", industry: "食品与餐饮", ic: 6 },
+            { id: 18, name: "王少江", profession: "企业商旅服务", industry: "商业与专业服务", ic: 4 },
+            { id: 19, name: "赵爽", profession: "贷款咨询服务", industry: "金融与投资", ic: 3 },
+            { id: 20, name: "苏缇", profession: "高端女装研发销售", industry: "时尚与生活", ic: 7 },
+            { id: 21, name: "李兰峰", profession: "最强大脑学习力", industry: "教育与文化", ic: 9 },
+            { id: 22, name: "胡慧静", profession: "白酒批发零售", industry: "食品与餐饮", ic: 6 },
+            { id: 23, name: "龙婧", profession: "民商事律师", industry: "商业与专业服务", ic: 4 },
+            { id: 24, name: "陈辉", profession: "潮汕菜", industry: "食品与餐饮", ic: 6 },
+            { id: 25, name: "张家珍", profession: "团体服生产销售", industry: "制造与贸易", ic: 2 },
+            { id: 26, name: "余畯翰", profession: "服装代加工生产", industry: "制造与贸易", ic: 2 },
+            { id: 27, name: "徐葆青", profession: "男女私密护理产品", industry: "医疗与健康", ic: 8 },
+            { id: 28, name: "李春霞", profession: "医疗美容", industry: "医疗与健康", ic: 8 },
+            { id: 29, name: "刘群飞", profession: "食用营养保健品", industry: "医疗与健康", ic: 8 },
+            { id: 30, name: "肖朝丽", profession: "税务合规", industry: "商业与专业服务", ic: 4 },
+            { id: 31, name: "罗惠珊", profession: "青少年辅导", industry: "教育与文化", ic: 9 },
+            { id: 32, name: "梁玉银", profession: "实木家具", industry: "房产与建材", ic: 1 },
+            { id: 33, name: "胡仲锦", profession: "窗帘", industry: "房产与建材", ic: 1 },
+            { id: 34, name: "方明", profession: "银行跨境金融服务", industry: "金融与投资", ic: 3 },
+            { id: 35, name: "王岚", profession: "企业管理咨询", industry: "商业与专业服务", ic: 4 },
+            { id: 36, name: "吴致炜", profession: "肩颈疏压连锁加盟", industry: "医疗与健康", ic: 8 },
+            { id: 37, name: "曾洲洲", profession: "国内物流", industry: "商业与专业服务", ic: 4 },
+            { id: 38, name: "叶蔼云", profession: "植物精油疗法", industry: "医疗与健康", ic: 8 },
+            { id: 39, name: "夏军", profession: "软体家具", industry: "房产与建材", ic: 1 },
+            { id: 40, name: "黄琼宾", profession: "刑事律师", industry: "商业与专业服务", ic: 4 },
+            { id: 41, name: "吴杰林", profession: "铝合金门窗", industry: "房产与建材", ic: 1 },
+            { id: 42, name: "韩东海", profession: "电梯", industry: "房产与建材", ic: 1 },
+            { id: 43, name: "马文英", profession: "美发设计造型", industry: "时尚与生活", ic: 7 },
+            { id: 44, name: "温惠娴", profession: "个人形象顾问", industry: "时尚与生活", ic: 7 },
+            { id: 45, name: "汪鸿", profession: "股权投资", industry: "金融与投资", ic: 3 },
+            { id: 46, name: "王玲", profession: "海味参茸滋补品", industry: "食品与餐饮", ic: 6 },
+            { id: 47, name: "黄伟明", profession: "床垫", industry: "房产与建材", ic: 1 },
+            { id: 48, name: "廖小莹", profession: "中医门诊", industry: "医疗与健康", ic: 8 },
+            { id: 49, name: "韩胜方", profession: "空调销售及维保", industry: "房产与建材", ic: 1 },
+            { id: 50, name: "丁乐文", profession: "企业劳资顾问", industry: "商业与专业服务", ic: 4 },
+            { id: 51, name: "李梅", profession: "书法艺术培训", industry: "教育与文化", ic: 9 },
+            { id: 52, name: "蹇梦琴", profession: "健身运动馆", industry: "医疗与健康", ic: 8 },
+            { id: 53, name: "欧沛汝", profession: "翡翠珠宝", industry: "时尚与生活", ic: 7 },
+            { id: 54, name: "李勇辉", profession: "口腔连锁", industry: "医疗与健康", ic: 8 },
+        ];
+
+        // ===== INDUSTRY CONFIG =====
+        const IC = {
+            1: { bg: "#FFF8E1", border: "#F9A825", label: "房产与建材" },
+            2: { bg: "#E8F5E9", border: "#43A047", label: "制造与贸易" },
+            3: { bg: "#FFF3E0", border: "#FB8C00", label: "金融与投资" },
+            4: { bg: "#E3F2FD", border: "#1E88E5", label: "商业与专业服务" },
+            6: { bg: "#FBE9E7", border: "#E64A19", label: "食品与餐饮" },
+            7: { bg: "#F3E5F5", border: "#8E24AA", label: "时尚与生活" },
+            8: { bg: "#E0F2F1", border: "#00897B", label: "医疗与健康" },
+            9: { bg: "#FFFDE7", border: "#F9A825", label: "教育与文化" },
+            10: { bg: "#ECEFF1", border: "#546E7A", label: "电子与科技" },
+        };
+
+        // ===== APP STATE =====
+        let currentScreen = 'home';
+        let currentTestMode = null;
+        let settings = {
+            timer: 5,
+            startNumber: 1,
+            endNumber: 54,
+            industries: 'all'
+        };
+
+        let testState = {
+            questions: [],
+            currentQuestion: 0,
+            answers: [],
+            correct: 0,
+            wrong: []
+        };
+
+        let timerInterval = null;
+        let timeLeft = 0;
+
+        // ===== SCREEN MANAGEMENT =====
+        function showScreen(screenName) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenName + 'Screen').classList.add('active');
+            currentScreen = screenName;
+        }
+
+        // ===== SETTINGS FUNCTIONS =====
+        function showSettings() {
+            // Reset to current values when opening
+            document.querySelector('[data-timer="' + settings.timer + '"]').classList.add('selected');
+            document.getElementById('startRange').value = settings.startNumber;
+            document.getElementById('startLabel').textContent = settings.startNumber;
+            document.getElementById('endRange').value = settings.endNumber;
+            document.getElementById('endLabel').textContent = settings.endNumber;
+            showScreen('settings');
+        }
+
+        function setTimer(value) {
+            settings.timer = value;
+            document.querySelectorAll('[data-timer]').forEach(btn => btn.classList.remove('selected'));
+            document.querySelector('[data-timer="' + value + '"]').classList.add('selected');
+        }
+
+        function updateStartRange(value) {
+            value = parseInt(value);
+            if (value > parseInt(document.getElementById('endRange').value)) {
+                document.getElementById('startRange').value = document.getElementById('endRange').value;
+            } else {
+                document.getElementById('startLabel').textContent = value;
+            }
+        }
+
+        function updateEndRange(value) {
+            value = parseInt(value);
+            if (value < parseInt(document.getElementById('startRange').value)) {
+                document.getElementById('endRange').value = document.getElementById('startRange').value;
+            } else {
+                document.getElementById('endLabel').textContent = value;
+            }
+        }
+
+        function toggleIndustry(industry) {
+            const btn = document.querySelector('[data-industry="' + industry + '"]');
+            if (industry === 'all') {
+                document.querySelectorAll('[data-industry]').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                settings.industries = 'all';
+            } else {
+                document.querySelector('[data-industry="all"]').classList.remove('selected');
+                btn.classList.toggle('selected');
+                const selected = Array.from(document.querySelectorAll('[data-industry]:not([data-industry="all"]).selected')).map(b => b.dataset.industry);
+                settings.industries = selected.length === 0 ? 'all' : selected;
+            }
+        }
+
+        function saveSettings() {
+            settings.startNumber = parseInt(document.getElementById('startRange').value);
+            settings.endNumber = parseInt(document.getElementById('endRange').value);
+            backToHome();
+        }
+
+        // ===== TEST INITIALIZATION =====
+        function startTest(mode) {
+            currentTestMode = mode;
+            generateQuestions(mode);
+            showScreen('testing');
+            displayQuestion();
+        }
+
+        function generateQuestions(mode) {
+            let candidates = members.filter(m => m.id >= settings.startNumber && m.id <= settings.endNumber);
+
+            if (settings.industries !== 'all') {
+                const industryList = Array.isArray(settings.industries) ? settings.industries : [settings.industries];
+                candidates = candidates.filter(m => industryList.includes(String(m.ic)));
+            }
+
+            // Shuffle
+            candidates = candidates.sort(() => Math.random() - 0.5);
+
+            testState.questions = candidates.map(member => {
+                let question, answer;
+                switch(mode) {
+                    case 1: // 编号→人名
+                        question = String(member.id);
+                        answer = member.name;
+                        break;
+                    case 2: // 人名→编号
+                        question = member.name;
+                        answer = String(member.id);
+                        break;
+                    case 3: // 人名→行业
+                        question = member.name;
+                        answer = IC[member.ic].label;
+                        break;
+                    case 4: // 行业→人名
+                        question = member.profession;
+                        answer = member.name;
+                        break;
+                }
+                return { member, question, answer };
+            });
+
+            testState.currentQuestion = 0;
+            testState.answers = [];
+            testState.correct = 0;
+            testState.wrong = [];
+        }
+
+        // ===== TESTING SCREEN FUNCTIONS =====
+        function displayQuestion() {
+            const q = testState.questions[testState.currentQuestion];
+            document.getElementById('questionDisplay').textContent = q.question;
+            document.getElementById('progress').textContent = (testState.currentQuestion + 1) + '/' + testState.questions.length;
+            document.getElementById('score').textContent = testState.correct;
+            const accuracy = testState.currentQuestion === 0 ? 0 : Math.round((testState.correct / testState.currentQuestion) * 100);
+            document.getElementById('accuracy').textContent = accuracy + '%';
+
+            const progress = (testState.currentQuestion / testState.questions.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+
+            document.getElementById('controlsContainer').innerHTML = '<button class="reveal-btn" onclick="revealAnswer()">点击揭晓答案</button>';
+            document.getElementById('timerContainer').style.display = 'none';
+
+            if (settings.timer !== 'unlimited') {
+                timeLeft = settings.timer;
+                showTimer();
+            }
+        }
+
+        function showTimer() {
+            const timer = document.getElementById('timerContainer');
+            timer.style.display = 'flex';
+            timer.textContent = timeLeft;
+
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timer.textContent = timeLeft;
+                if (timeLeft <= 3) {
+                    timer.classList.add('warning');
+                } else {
+                    timer.classList.remove('warning');
+                }
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    revealAnswer();
+                }
+            }, 1000);
+        }
+
+        function revealAnswer() {
+            if (timerInterval) clearInterval(timerInterval);
+
+            const q = testState.questions[testState.currentQuestion];
+            const icColor = IC[q.member.ic];
+
+            let answerHTML = `
+                <div class="answer-card" style="border-left-color: ${icColor.border}; background: ${icColor.bg};">
+                    <div class="answer-title">正确答案</div>
+            `;
+
+            if (currentTestMode === 1 || currentTestMode === 2) {
+                answerHTML += `<div class="answer-name">${q.member.name}</div>`;
+            }
+
+            answerHTML += `
+                <div class="answer-info">
+                    <div class="answer-info-row"><span class="answer-label">编号：</span><span class="answer-value">${q.member.id}</span></div>
+                    <div class="answer-info-row"><span class="answer-label">职业：</span><span class="answer-value">${q.member.profession}</span></div>
+                    <div class="answer-info-row"><span class="answer-label">行业：</span><span class="answer-value">${icColor.label}</span></div>
+                </div>
+                <div class="response-buttons">
+                    <button class="btn-remember" onclick="markCorrect()">✓ 记住了</button>
+                    <button class="btn-forgot" onclick="markWrong()">✗ 没记住</button>
+                </div>
+            </div>
+            `;
+
+            document.getElementById('controlsContainer').innerHTML = answerHTML;
+        }
+
+        function markCorrect() {
+            const q = testState.questions[testState.currentQuestion];
+            testState.answers.push(true);
+            testState.correct++;
+            nextQuestion();
+        }
+
+        function markWrong() {
+            const q = testState.questions[testState.currentQuestion];
+            testState.answers.push(false);
+            testState.wrong.push({
+                question: q.question,
+                correct: q.answer,
+                member: q.member
+            });
+            nextQuestion();
+        }
+
+        function nextQuestion() {
+            testState.currentQuestion++;
+            if (testState.currentQuestion >= testState.questions.length) {
+                showResults();
+            } else {
+                displayQuestion();
+            }
+        }
+
+        function confirmExit() {
+            if (confirm('确定要退出测试吗？')) {
+                backToHome();
+            }
+        }
+
+        // ===== RESULTS SCREEN =====
+        function showResults() {
+            const total = testState.questions.length;
+            const correct = testState.correct;
+            const accuracy = Math.round((correct / total) * 100);
+
+            document.getElementById('totalQuestions').textContent = total;
+            document.getElementById('correctAnswers').textContent = correct;
+            document.getElementById('finalAccuracy').textContent = accuracy + '%';
+            document.getElementById('accuracyBar').style.width = accuracy + '%';
+
+            let wrongHTML = '';
+            if (testState.wrong.length > 0) {
+                wrongHTML = '<div class="wrong-answers"><div class="wrong-answers-title">错误题目</div>';
+                testState.wrong.forEach(item => {
+                    wrongHTML += `
+                        <div class="wrong-item">
+                            <div class="wrong-item-question">题目：${item.question}</div>
+                            <div class="wrong-item-your">你的回答：？</div>
+                            <div class="wrong-item-correct">正确答案：${item.correct}</div>
+                        </div>
+                    `;
+                });
+                wrongHTML += '</div>';
+            }
+            document.getElementById('wrongAnswersList').innerHTML = wrongHTML;
+
+            showScreen('results');
+        }
+
+        // ===== NAVIGATION =====
+        function backToHome() {
+            if (timerInterval) clearInterval(timerInterval);
+            showScreen('home');
+        }
+    </script>
+</body>
+</html>
